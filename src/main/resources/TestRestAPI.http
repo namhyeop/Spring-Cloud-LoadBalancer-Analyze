@@ -1,0 +1,32 @@
+### 1. 인스턴스 선택 (runit service 라운드로빈 로드밸런싱 테스트)
+GET http://localhost:8080/loadbalancer/choose?serviceId=runit-service
+
+### 1. 인스턴스 선택 (nh service 랜덤 로드밸런싱 테스트)
+GET http://localhost:8080/loadbalancer/choose?serviceId=nh-service
+
+### 2-1. runit-service의 모든 인스턴스 조회
+GET http://localhost:8080/loadbalancer/instances?serviceId=runit-service
+
+### 2-2. nh-service의 모든 인스턴스 조회
+GET http://localhost:8080/loadbalancer/instances?serviceId=nh-service
+
+### 3. 새로운 인스턴스 추가
+POST http://localhost:8080/loadbalancer/instances
+Content-Type: application/json
+
+{
+  "serviceId": "runit-service",
+  "instanceId": "21",
+  "host": "runit-service",
+  "port": 9084,
+  "secure": false
+}
+
+### 4. 인스턴스 제거
+DELETE http://localhost:8080/loadbalancer/instances/2
+
+### 5. 블락킹 Rest API 테스트
+GET http://localhost:8080/loadbalancer/interceptor
+
+### 6. 논블락킹 Rest API 테스트
+GET http://localhost:8080/loadbalancer/filter

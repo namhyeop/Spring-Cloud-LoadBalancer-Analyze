@@ -1,0 +1,70 @@
+@startuml
+skinparam handwritten false
+skinparam backgroundColor white
+skinparam sequence {
+    ArrowColor DeepSkyBlue
+    ActorBorderColor DeepSkyBlue
+    LifeLineBorderColor blue
+    LifeLineBackgroundColor #A9DCDF
+    
+    ParticipantBorderColor DeepSkyBlue
+    ParticipantBackgroundColor DeepSkyBlue
+    ParticipantFontName Impact
+    ParticipantFontSize 17
+    ParticipantFontColor #A9DCDF
+}
+
+participant "Client" as client
+participant "LoadBalancerClient" as lbc
+participant "ServiceInstanceListSupplier" as sils
+participant "LoadBalancer" as lb
+participant "DummyServiceDiscovery" as sd
+participant "DummyDiscoveryClient1" as i1
+participant "DummyDiscoveryClient2" as i2
+
+== 초기화 단계 ==
+lbc -> sils: 초기화
+sils -> sd: 서비스 디스커버리 연결
+
+== 요청 처리 단계 ==
+client -> lbc: 서비스 요청
+activate lbc
+
+lbc -> sils: getInstances()
+activate sils
+
+sils -> sd: 서비스 인스턴스 조회
+activate sd
+sd --> sils: 사용 가능한 인스턴스 목록 반환
+deactivate sd
+
+sils --> lbc: 인스턴스 리스트 전달
+deactivate sils
+
+lbc -> lb: choose()
+activate lb
+note right: 로드밸런싱 알고리즘 적용\n(Round Robin/Random)
+lb --> lbc: 선택된 인스턴스 반환
+deactivate lb
+
+alt 인스턴스1 선택된 경우
+    lbc -> i1: 요청 전달
+    activate i1
+    i1 --> client: 응답
+    deactivate i1
+else 인스턴스2 선택된 경우
+    lbc -> i2: 요청 전달
+    activate i2
+    i2 --> client: 응답
+    deactivate i2
+end
+
+deactivate lbc
+
+== 오류 처리 ==
+alt 인스턴스 실패 시
+    lbc -> lb: retry()
+    lb -> lbc: 새로운 인스턴스 선택
+end
+
+@enduml
