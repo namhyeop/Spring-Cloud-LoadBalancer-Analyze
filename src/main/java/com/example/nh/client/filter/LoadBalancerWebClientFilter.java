@@ -13,7 +13,6 @@ import org.springframework.web.reactive.function.client.ExchangeFunction;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
-//TODO: 클라이언트 필터 테스트 추가
 @Slf4j
 @RequiredArgsConstructor
 public class LoadBalancerWebClientFilter implements ExchangeFilterFunction {

@@ -44,10 +44,6 @@ public class LoadBalancerTestController {
 
     @GetMapping("/choose")
     public Mono<ServiceInstance> chooseInstance(@RequestParam String serviceId) {
-        LoadBalancer instance1 = loadBalancerFactory.getInstance("runit-service");
-        LoadBalancer instance2 = loadBalancerFactory.getInstance("nh-service");
-        System.out.println("instance1 = " + instance1.getClass());
-        System.out.println("instance1 = " + instance2.getClass());
         log.info("[로드밸런스 테스트] 라운드로빈 인스턴스 serviceId: {}", serviceId);
         return loadBalancerFactory.getInstance(serviceId)
                                   .choose(serviceId)

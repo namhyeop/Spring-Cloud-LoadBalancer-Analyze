@@ -31,7 +31,6 @@ public abstract class AbstractLoadBalancer implements LoadBalancer {
     public Mono<ServiceInstance> choose(Request request) {
         log.info("[동작중인 로드밸런서] 서비스: {}, 로드밸런서 타입: {}",
             request.getServiceId(), this.getClass().getSimpleName());
-
         if (serviceInstanceListSupplier instanceof DefaultServiceInstanceListSupplier) {
             ((DefaultServiceInstanceListSupplier) serviceInstanceListSupplier)
                 .setServiceId(request.getServiceId());

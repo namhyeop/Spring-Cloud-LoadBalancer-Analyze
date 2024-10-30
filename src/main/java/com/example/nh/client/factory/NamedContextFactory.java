@@ -6,23 +6,18 @@
 package com.example.nh.client.factory;
 
 import com.example.nh.client.factory.NamedContextFactory.Specification;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.aot.AotDetector;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration;
 import org.springframework.context.ApplicationContext;
@@ -62,10 +57,6 @@ public abstract class NamedContextFactory<C extends Specification> implements Di
         this.parent = parent;
     }
 
-    public ApplicationContext getParent() {
-        return this.parent;
-    }
-
     public void setConfigurations(List<C> configurations) {
         Iterator var2 = configurations.iterator();
 
@@ -74,10 +65,6 @@ public abstract class NamedContextFactory<C extends Specification> implements Di
             this.configurations.put(client.getName(), client);
         }
 
-    }
-
-    public Set<String> getContextNames() {
-        return new HashSet(this.contexts.keySet());
     }
 
     public void destroy() {
@@ -194,16 +181,6 @@ public abstract class NamedContextFactory<C extends Specification> implements Di
         }
     }
 
-    public <T> ObjectProvider<T> getProvider(String name, Class<T> type) {
-        GenericApplicationContext context = this.getContext(name);
-        return context.getBeanProvider(type);
-    }
-
-    public <T> T getInstance(String name, Class<?> clazz, Class<?>... generics) {
-        ResolvableType type = ResolvableType.forClassWithGenerics(clazz, generics);
-        return this.getInstance(name, type);
-    }
-
     public <T> T getInstance(String name, ResolvableType type) {
         GenericApplicationContext context = this.getContext(name);
         String[] beanNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(context, type);
@@ -218,36 +195,6 @@ public abstract class NamedContextFactory<C extends Specification> implements Di
         }
 
         return null;
-    }
-
-    public <T> T getAnnotatedInstance(String name, ResolvableType type, Class<? extends Annotation> annotationType) {
-        GenericApplicationContext context = this.getContext(name);
-        String[] beanNames = BeanFactoryUtils.beanNamesForAnnotationIncludingAncestors(context, annotationType);
-        List<T> beans = new ArrayList();
-        String[] var7 = beanNames;
-        int var8 = beanNames.length;
-
-        for(int var9 = 0; var9 < var8; ++var9) {
-            String beanName = var7[var9];
-            if (context.isTypeMatch(beanName, type)) {
-                beans.add((T) context.getBean(beanName));
-            }
-        }
-
-        if (beans.size() > 1) {
-            throw new IllegalStateException("Only one annotated bean for type expected.");
-        } else {
-            return beans.isEmpty() ? null : beans.get(0);
-        }
-    }
-
-    public <T> Map<String, T> getInstances(String name, Class<T> type) {
-        GenericApplicationContext context = this.getContext(name);
-        return BeanFactoryUtils.beansOfTypeIncludingAncestors(context, type);
-    }
-
-    public Map<String, C> getConfigurations() {
-        return this.configurations;
     }
 
     public interface Specification {

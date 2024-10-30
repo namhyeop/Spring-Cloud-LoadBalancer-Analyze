@@ -23,7 +23,7 @@ Content-Type: application/json
 }
 
 ### 4. 인스턴스 제거
-DELETE http://localhost:8080/loadbalancer/instances/2
+DELETE http://localhost:8080/loadbalancer/instances/21
 
 ### 5. 블락킹 Rest API 테스트
 GET http://localhost:8080/loadbalancer/interceptor

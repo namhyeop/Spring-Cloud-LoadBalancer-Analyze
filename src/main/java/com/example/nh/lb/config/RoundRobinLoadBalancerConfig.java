@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class RoundRobinLoadBalancerConfig {
 
     @Bean
-    public LoadBalancer RoundRobinloadBalancer(ServiceInstanceListSupplier supplier, LoadBalancerCache cache,
+    public LoadBalancer roundRobinloadBalancer(ServiceInstanceListSupplier supplier, LoadBalancerCache cache,
         HealthCheckService healthCheckService) {
         return new RoundRobinLoadBalancer(supplier, cache, healthCheckService);
     }

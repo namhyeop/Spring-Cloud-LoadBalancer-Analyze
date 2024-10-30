@@ -15,7 +15,6 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.support.HttpRequestWrapper;
 import org.springframework.web.util.UriComponentsBuilder;
 
-//TODO: 인터셉터 테스트 추가
 @Slf4j
 @RequiredArgsConstructor
 public class LoadBalancerInterceptor implements ClientHttpRequestInterceptor {
